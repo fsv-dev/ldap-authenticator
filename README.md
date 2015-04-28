@@ -10,5 +10,5 @@ composer require fsv-dev/ldap-authentificator
 Configuration:
 --------------
 <pre>
-App\Model\LdapAuthenticator(%host%, %port%, %base%)
+Ldap\LdapAuthenticator(%host%, %port%, %base%)
 </pre>
