@@ -6,7 +6,7 @@
  * @author Kraus Vaclav <krauva@gmail.com>
  */
 
-namespace App\Model;
+namespace Ldap;
 
 use Nette\Security as NS;
 use Nette;
