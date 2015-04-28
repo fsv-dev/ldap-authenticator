@@ -31,7 +31,7 @@ class LdapAuthenticator extends Nette\Object implements NS\IAuthenticator {
 	    TABLE_USERNAME = 'username';
 
     //TODO prozatim odebrana databaze
-    public function __construct(Nette\Database\Context $db, $host, $port, $base) {
+    public function __construct($host, $port, $base, Nette\Database\Context $db) {
 	$this->host = $this->detectValue($host);
 	$this->port = $this->detectValue($port);
 	$this->base = $this->detectValue($base);
@@ -77,7 +77,7 @@ class LdapAuthenticator extends Nette\Object implements NS\IAuthenticator {
 
 	// Database perform
 	if ($this->databaseDetect($username) == TRUE) {
-	    return new NS\Identity($username, $this->getRole($username));
+	    return new NS\Identity($username, $this->getRole($username)['role']);
 	}
 	throw new Nette\Security\AuthenticationException(self::IDENTITY_NOT_FOUND);
 
@@ -97,7 +97,7 @@ class LdapAuthenticator extends Nette\Object implements NS\IAuthenticator {
     }
 
     private function getRole($username) {
-	return $this->db->table(self::TABLE_NAME)->select(self::TABLE_ROLE)->where(self::TABLE_USERNAME, $username);
+	return $this->db->table(self::TABLE_NAME)->select(self::TABLE_ROLE)->where(self::TABLE_USERNAME, $username)->fetch();
     }
 
     /**
@@ -118,7 +118,7 @@ class LdapAuthenticator extends Nette\Object implements NS\IAuthenticator {
      * @return boolean
      */
     private function databaseDetect($username) {
-	$temp = $this->db->table(self::TABLE_NAME)->count('*')->where('username = ?', $username);
+	$temp = $this->db->table(self::TABLE_NAME)->where('username = ?', $username)->count();
 
 	// If user exist in database
 	if ($temp > 0) {
