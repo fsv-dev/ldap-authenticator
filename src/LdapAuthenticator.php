@@ -19,6 +19,12 @@ use Nette;
 class LdapAuthenticator extends Nette\Object implements NS\IAuthenticator {
 
     private $host, $port, $base;
+    
+    const
+	ERROR_MESSAGE_AUTH_USER = 'Neplatné uživatelské jméno.',
+	ERROR_MESSAGE_AUTH_PASS = 'Neplatné heslo.',
+	ERROR_MESSAGE_CONF_DETECT = 'Value of LdapAuthenticator config not be empty',
+	ERROR_MESSAGE_LDAP_BIND = 'Failed to bind to LDAP server';
 
     //TODO prozatim odebrana databaze
     public function __construct($host, $port, $base) {
@@ -45,12 +51,12 @@ class LdapAuthenticator extends Nette\Object implements NS\IAuthenticator {
 
 	$res = \ldap_bind($ldap);
 	if (!$res) {
-	    throw new \Exception('Failed to bind to LDAP server');
+	    throw new \Exception(self::ERROR_MESSAGE_LDAP_BIND);
 	}
 	$res = \ldap_search($ldap, $this->base, $this->searchString($username), array('dn'));
 
 	if (\ldap_count_entries($ldap, $res) != 1) {
-	    throw new Nette\Security\AuthenticationException('Neplatné uživatelské jméno.', self::IDENTITY_NOT_FOUND);
+	    throw new Nette\Security\AuthenticationException(self::ERROR_MESSAGE_AUTH_USER, self::IDENTITY_NOT_FOUND);
 	}
 	// Pokud uzivatel existuje v LDAPu ...
 	$detect = TRUE;
@@ -61,7 +67,7 @@ class LdapAuthenticator extends Nette\Object implements NS\IAuthenticator {
 	//bind na prihlasovaneho uzivatele
 	$res = @ldap_bind($ldap, $dn, $password);
 	if (!$res) {
-	    throw new Nette\Security\AuthenticationException('Neplatné heslo.', self::INVALID_CREDENTIAL);
+	    throw new Nette\Security\AuthenticationException(self::ERROR_MESSAGE_AUTH_PASS, self::INVALID_CREDENTIAL);
 	}
 	
 	// Load data from database
@@ -87,7 +93,7 @@ class LdapAuthenticator extends Nette\Object implements NS\IAuthenticator {
      */
     private function detectValue($value) {
 	if ($value == "") {
-	    throw new \Exception('Value of LdapAuthenticator config not be empty');
+	    throw new \Exception(self::ERROR_MESSAGE_CONF_DETECT);
 	}
 	return $value;
     }
