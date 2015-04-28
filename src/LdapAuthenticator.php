@@ -26,6 +26,7 @@ class LdapAuthenticator extends Nette\Object implements NS\IAuthenticator {
 	    ERROR_MESSAGE_AUTH_PASS = 'Neplatné heslo.',
 	    ERROR_MESSAGE_CONF_DETECT = 'Value of LdapAuthenticator config not be empty',
 	    ERROR_MESSAGE_LDAP_BIND = 'Failed to bind to LDAP server',
+	    ERROR_MESSAGE_DB_USER_NOT_FOUND = 'Nemáte oprávnění k přístupu do této aplikace.',
 	    TABLE_NAME = 'users',
 	    TABLE_ROLE = 'role',
 	    TABLE_USERNAME = 'username';
@@ -79,9 +80,7 @@ class LdapAuthenticator extends Nette\Object implements NS\IAuthenticator {
 	if ($this->databaseDetect($username) == TRUE) {
 	    return new NS\Identity($username, $this->getRole($username)['role']);
 	}
-	throw new Nette\Security\AuthenticationException(self::IDENTITY_NOT_FOUND);
-
-	//return new NS\Identity($username);
+	throw new Nette\Security\AuthenticationException(self::ERROR_MESSAGE_DB_USER_NOT_FOUND, self::IDENTITY_NOT_FOUND);
     }
 
     /**
