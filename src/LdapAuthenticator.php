@@ -13,7 +13,7 @@ use Nette;
 use App\Model;
 
 /**
- * Description of LdapSecurityAuthenticator
+ * Description of SecurityAuthenticator
  *
  * @author Vaclav Kraus <krauva@gmail.com>
  */
@@ -22,14 +22,16 @@ class LdapAuthenticator extends Nette\Object implements NS\IAuthenticator {
     private $host, $port, $base, $db;
 
     const
-	    ERROR_MESSAGE_AUTH_USER = 'Neplatné uživatelské jméno.',
-	    ERROR_MESSAGE_AUTH_PASS = 'Neplatné heslo.',
+	    ERROR_MESSAGE_AUTH_USER = 'Neplatne uzivatelske jmeno.',
+	    ERROR_MESSAGE_AUTH_PASS = 'Neplatne heslo.',
 	    ERROR_MESSAGE_CONF_DETECT = 'Value of LdapAuthenticator config not be empty',
 	    ERROR_MESSAGE_LDAP_BIND = 'Failed to bind to LDAP server',
-	    ERROR_MESSAGE_DB_USER_NOT_FOUND = 'Nemáte oprávnění k přístupu do této aplikace.',
+	    ERROR_MESSAGE_DB_USER_NOT_FOUND = 'Nemate opravneni k pristupu do teto aplikace.',
 	    TABLE_NAME = 'users',
 	    TABLE_ROLE = 'role',
-	    TABLE_USERNAME = 'username';
+	    TABLE_DATA = 'data',
+	    TABLE_USERNAME = 'username',
+	    TABLE_USER_ID = 'id';
 
     //TODO prozatim odebrana databaze
     public function __construct($host, $port, $base, Nette\Database\Context $db) {
@@ -78,7 +80,7 @@ class LdapAuthenticator extends Nette\Object implements NS\IAuthenticator {
 
 	// Database perform
 	if ($this->databaseDetect($username) == TRUE) {
-	    return new NS\Identity($username, $this->getRole($username)['role']);
+	    return new NS\Identity($username, $this->getRole($username)['role'], $this->getData($username));
 	}
 	throw new Nette\Security\AuthenticationException(self::ERROR_MESSAGE_DB_USER_NOT_FOUND, self::IDENTITY_NOT_FOUND);
     }
@@ -95,8 +97,33 @@ class LdapAuthenticator extends Nette\Object implements NS\IAuthenticator {
 	return "(uid=$string)";
     }
 
+    /**
+     * Return role for current user.
+     * 
+     * @param string|int $username
+     * @return array
+     */
     private function getRole($username) {
+	if (is_numeric($username)) {
+	    return $this->db->table(self::TABLE_NAME)->select(self::TABLE_ROLE)->where(self::TABLE_USER_ID, $username)->fetch();
+	}
 	return $this->db->table(self::TABLE_NAME)->select(self::TABLE_ROLE)->where(self::TABLE_USERNAME, $username)->fetch();
+    }
+
+    /**
+     * Return data for current user.
+     * 
+     * @param string|int $username
+     * @return array
+     */
+    private function getData($username) {
+	if (is_numeric($username)) {
+	    $temp = $this->db->table(self::TABLE_NAME)->select(self::TABLE_DATA)->where(self::TABLE_USER_ID, $username)->fetch();
+	} else{
+	    $temp = $this->db->table(self::TABLE_NAME)->select(self::TABLE_DATA)->where(self::TABLE_USERNAME, $username)->fetch();
+	}
+	
+	return explode(',', $temp['data']);
     }
 
     /**
@@ -117,7 +144,11 @@ class LdapAuthenticator extends Nette\Object implements NS\IAuthenticator {
      * @return boolean
      */
     private function databaseDetect($username) {
-	$temp = $this->db->table(self::TABLE_NAME)->where('username = ?', $username)->count();
+	if (is_numeric($username)) {
+	    $temp = $this->db->table(self::TABLE_NAME)->where('id = ?', $username)->count();
+	} else {
+	    $temp = $this->db->table(self::TABLE_NAME)->where('username = ?', $username)->count();
+	}
 
 	// If user exist in database
 	if ($temp > 0) {
