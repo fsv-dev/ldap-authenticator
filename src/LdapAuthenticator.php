@@ -31,8 +31,8 @@ class LdapAuthenticator extends Nette\Object implements NS\IAuthenticator
         TABLE_NAME = 'users',
         TABLE_ROLE = 'role',
         TABLE_DATA = 'data',
-        TABLE_USERNAME = 'username',
-        TABLE_USER_ID = 'id';
+        TABLE_USERNAME = 'uid',
+        TABLE_USER_ID = 'cuniPersonalId';
 
     //TODO prozatim odebrana databaze
     public function __construct($host, $port, $base, Nette\Database\Context $db)
