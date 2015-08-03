@@ -1,20 +1,33 @@
 {
-    "name": "fsv-dev/ldap-authentificator",
-    "type": "project",
-    "description": "Library for simple authentificate via LDAP",
-    "keywords": ["library", "ldap", "authentificate", "auth", "simple"],
-    "homepage": "https://github.com/fsv-dev/ldap-authentificator",
-    "license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
-    "authors": [
-	{
-	    "name": "Vaclav Kraus",
-	    "homepage": "http://vk-web.cz"
-	}
-    ],
-    "require": {
-	"php": ">=5.4.0"
-    },
-    "autoload": {
-	"classmap": ["src/"]
+  "name": "fsv-dev/ldap-authentificator",
+  "type": "project",
+  "description": "Library for simple authentificate via LDAP",
+  "keywords": [
+    "library",
+    "ldap",
+    "authentificate",
+    "auth",
+    "simple"
+  ],
+  "homepage": "https://github.com/fsv-dev/ldap-authentificator",
+  "license": [
+    "BSD-3-Clause",
+    "GPL-2.0",
+    "GPL-3.0"
+  ],
+  "authors": [
+    {
+      "name": "Vaclav Kraus",
+      "homepage": "http://vk-web.cz"
     }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "nette/database": "~2.3"
+  },
+  "autoload": {
+    "classmap": [
+      "src/"
+    ]
+  }
 }
