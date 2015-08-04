@@ -3,7 +3,7 @@ Nette\DI extension for provide LDAP authenticate
 
 ## Install:
 <pre>
-composer require ----
+composer require fsv-dev/ldap-authenticator
 </pre>
 
 ## Configuration:
@@ -21,5 +21,5 @@ extensions:
 </pre>
 
 ### Parameters
-**skipDatabase** - default value FALSE. If isset TRUE, Ldap\Authenticator provide authentication only via LDAP server. All
+**skipDatabase** - default value FALSE. If is set TRUE, Ldap\Authenticator provide authentication only via LDAP server. All
 users set as guest role
