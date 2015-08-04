@@ -28,6 +28,7 @@ extensions:
 ### Parameters
 **authenticateOption**
 
+Value | Description
 ------------ | -------------
 skipDatabase | For authorization is required only LDAP. Ldap\Authenticator set for all users role guest
 onlyPrivilegedUsers | Require LDAP authorization and if user also exist in local database, Ldap\Authenticator load user's role. For others set role guest
