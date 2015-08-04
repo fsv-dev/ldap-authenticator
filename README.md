@@ -4,14 +4,15 @@
 Nette\DI extension for provide LDAP authenticate
 
 ## Install
-<pre>
-composer require fsv-dev/ldap-authenticator
-</pre>
+```sh
+$ composer require fsv-dev/ldap-authenticator
+```
 
 ## Configuration
 
 ### config.neon
-<pre>
+```php
+
 extensions:
 	ldap: Ldap\DI\LdapExtension
 	
@@ -21,7 +22,8 @@ extensions:
     	dn: 'dc=cz'
     	skipDatabase: TRUE // Optional (default FALSE)
     	createDatabase: TRUE // Optional (default FALSE)
-</pre>
+    	
+```
 
 ### Parameters
 **skipDatabase** - default value FALSE. If is set TRUE, Ldap\Authenticator provide authentication only via LDAP server. All

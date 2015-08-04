@@ -86,7 +86,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 	{
 		list($username, $password) = $credentials;
 
-		if($this->createDatabase == TRUE){
+		if($this->createDatabase == TRUE){ // Generate SQL table for users
 			if($this->dbManager->tableDetect() == FALSE){
 				$this->dbManager->create();
 			}

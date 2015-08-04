@@ -33,6 +33,7 @@ class DatabaseManager extends Nette\Object
   					cuniPersonalId INT(10) NOT NULL,
   					email VARCHAR(100) COLLATE utf8_czech_ci NOT NULL,
   					role VARCHAR(100) COLLATE utf8_czech_ci NOT NULL,
+  					data VARCHAR(255) COLLATE utf8_czech_ci NOT NULL,
   					PRIMARY KEY (id),
   					UNIQUE KEY uid (uid)
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci
