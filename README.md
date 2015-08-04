@@ -14,9 +14,9 @@ extensions:
 	ldap: Ldap\DI\LdapExtension
 	
 	ldap:
-    	server: 'ldaps://ldap.cuni.cz'
+    	server: 'ldaps://ldap.com'
     	port: 636
-    	dn: 'dc=cuni,dc=cz'
+    	dn: 'dc=cz'
     	skipDatabase: TRUE
 </pre>
 
