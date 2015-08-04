@@ -1,9 +1,11 @@
 <?php
-
-/*
- * This file is part of project ldap-authentificator
- * API for faculty of social sciences
- * @author Kraus Vaclav <krauva@gmail.com>
+/**
+ * This file is part of the fsv-dev/ldap-authenticator
+ *
+ * Copyright (c) 2015 Vaclav Kraus (krauva@gmail.com)
+ *
+ * For the full copyright and license information, please view the file license.txt that was distributed with this
+ * source code.
  */
 
 namespace Ldap;
