@@ -1,6 +1,6 @@
 {
-  "name": "fsv-dev/ldap-authentificator",
-  "type": "project",
+  "name": "fsv-dev/ldap-authenticator",
+  "type": "library",
   "description": "Library for authenticate via LDAP",
   "keywords": [
     "library",
@@ -26,8 +26,8 @@
     "nette/database": "~2.3"
   },
   "autoload": {
-    "classmap": [
-      "src/"
-    ]
+    "psr-0": {
+      "Ldap": "src/"
+    }
   }
 }
