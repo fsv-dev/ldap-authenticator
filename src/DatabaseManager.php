@@ -16,7 +16,7 @@ class DatabaseManager extends Nette\Object
 {
 	private $db;
 
-	public function __construct(\Nette\Database\Context $db)
+	public function __construct(Nette\Database\Context $db)
 	{
 		$this->db = $db;
 	}

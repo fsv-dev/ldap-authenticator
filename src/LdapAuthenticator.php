@@ -22,7 +22,7 @@ use Nette;
  */
 class Authenticator extends Nette\Object implements NS\IAuthenticator
 {
-	private $server, $port, $dn, $db, $ldap, $skipDatabase, $dbManager, $createDatabase;
+	private $server, $port, $dn, $db, $ldap, $dbManager, $createDatabase, $authenticateOption;
 
 	const
 		ERROR_MESSAGE_AUTH_USER = 'Neplatne uzivatelske jmeno.',
@@ -63,14 +63,14 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 		$this->dn = $dn;
 	}
 
-	public function setSkipDatabase($skipDatabase)
-	{
-		$this->skipDatabase = $skipDatabase;
-	}
-
 	public function setCreateDatabase($createDatabase)
 	{
 		$this->createDatabase = $createDatabase;
+	}
+
+	public function setAuthenticateOption($option)
+	{
+		$this->authenticateOption = $option;
 	}
 
 	/**
@@ -86,8 +86,8 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 	{
 		list($username, $password) = $credentials;
 
-		if($this->createDatabase == TRUE){ // Generate SQL table for users
-			if($this->dbManager->tableDetect() == FALSE){
+		if ($this->createDatabase == TRUE) { // Generate SQL table for users
+			if ($this->dbManager->tableDetect() == FALSE) {
 				$this->dbManager->create();
 			}
 		}
@@ -114,14 +114,24 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 			throw new Nette\Security\AuthenticationException(self::ERROR_MESSAGE_AUTH_PASS, self::INVALID_CREDENTIAL);
 		}
 
-		// Database perform
-		if ($this->skipDatabase == FALSE) {
+		// Full authenticate process
+		if ($this->authenticateOption == FALSE) {
 			if ($this->databaseDetect($username) == TRUE) {
 				return new NS\Identity($username, $this->getRole($username)['role'], $this->getData($username));
 			}
 			throw new Nette\Security\AuthenticationException(self::ERROR_MESSAGE_DB_USER_NOT_FOUND, self::IDENTITY_NOT_FOUND);
 		}
-		return new NS\Identity($username, 'guest');
+		// Skipping database
+		if ($this->authenticateOption == "skipDatabase") {
+			return new NS\Identity($username, 'guest');
+		}
+		// Only privileges
+		if ($this->authenticateOption == "onlyPrivilegedUsers") {
+			if ($this->databaseDetect($username) == TRUE) {
+				return new NS\Identity($username, $this->getRole($username)['role'], $this->getData($username));
+			}
+			return new NS\Identity($username, 'guest');
+		}
 	}
 
 	/**

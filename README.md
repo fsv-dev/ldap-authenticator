@@ -20,13 +20,19 @@ extensions:
     	server: 'ldaps://ldap.com'
     	port: 636 // Optional (default 636)
     	dn: 'dc=cz'
-    	skipDatabase: TRUE // Optional (default FALSE)
+    	authenticateOption: 'skipDatabase' // Optional (default FALSE)
     	createDatabase: TRUE // Optional (default FALSE)
     	
 ```
 
 ### Parameters
-**skipDatabase** - default value FALSE. If is set TRUE, Ldap\Authenticator provide authentication only via LDAP server. All
-users set as guest role
+**authenticateOption**
+
+Value | Description
+------------ | -------------
+skipDatabase | For authorization is required only LDAP. Ldap\Authenticator set for all users role guest
+onlyPrivilegedUsers | Require LDAP authorization and if user also exist in local database, Ldap\Authenticator load user's role. For others set role guest
+FALSE (default value) | Require both LDAP and database authorization. Roles load from database
+
 
 **createDatabase** - default value is FALSE. If is set TRUE, Ldap\DatabaseManager detect if table [users] exists and if not, create it.
