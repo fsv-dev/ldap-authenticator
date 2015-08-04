@@ -1,15 +1,15 @@
 {
   "name": "fsv-dev/ldap-authentificator",
   "type": "project",
-  "description": "Library for simple authentificate via LDAP",
+  "description": "Library for authenticate via LDAP",
   "keywords": [
     "library",
     "ldap",
-    "authentificate",
+    "authenticate",
     "auth",
     "simple"
   ],
-  "homepage": "https://github.com/fsv-dev/ldap-authentificator",
+  "homepage": "https://github.com/fsv-dev/ldap-authenticator",
   "license": [
     "BSD-3-Clause",
     "GPL-2.0",
