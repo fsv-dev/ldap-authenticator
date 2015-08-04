@@ -1,17 +1,14 @@
 # ldap-authentificator
 Nette\DI extension for provide LDAP authenticate
 
-Install:
---------
+## Install:
 <pre>
 composer require ----
 </pre>
 
-Configuration:
---------------
+## Configuration:
 
-config.neon
-===========
+### config.neon
 <pre>
 extensions:
 	ldap: Ldap\DI\LdapExtension
@@ -23,7 +20,6 @@ extensions:
     	skipDatabase: TRUE
 </pre>
 
-Parameters
-==========
-skipDatabase - default value FALSE. If isset TRUE, Ldap\Authenticator provide authentication only via LDAP server. All
+### Parameters
+**skipDatabase** - default value FALSE. If isset TRUE, Ldap\Authenticator provide authentication only via LDAP server. All
 users set as guest role
