@@ -106,7 +106,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 			}
 			throw new Nette\Security\AuthenticationException(self::ERROR_MESSAGE_DB_USER_NOT_FOUND, self::IDENTITY_NOT_FOUND);
 		}
-		return new NS\Identity($username, 'quest', '');
+		return new NS\Identity($username, 'guest');
 	}
 
 	/**
