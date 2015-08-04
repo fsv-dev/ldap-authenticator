@@ -1,5 +1,6 @@
 # ldap-authentificator
 [![License](https://img.shields.io/badge/license-GPLv2-blue.svg)](https://img.shields.io/badge/license-GPLv2-blue.svg)
+
 Nette\DI extension for provide LDAP authenticate
 
 ## Install:
