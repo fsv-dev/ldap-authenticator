@@ -22,7 +22,7 @@ use Nette;
  */
 class Authenticator extends Nette\Object implements NS\IAuthenticator
 {
-	private $server, $port, $dn, $db, $ldap, $skipDatabase;
+	private $server, $port, $dn, $db, $ldap, $skipDatabase, $dbManager, $createDatabase;
 
 	const
 		ERROR_MESSAGE_AUTH_USER = 'Neplatne uzivatelske jmeno.',
@@ -37,13 +37,15 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 		TABLE_USER_ID = 'cuniPersonalId';
 
 	/**
+	 * @param DatabaseManager $dbManager
 	 * @param Ldap $ldap
 	 * @param Context $db
 	 */
-	public function __construct(Ldap $ldap, Context $db)
+	public function __construct(DatabaseManager $dbManager, Ldap $ldap, Context $db)
 	{
 		$this->db = $db;
 		$this->ldap = $ldap;
+		$this->dbManager = $dbManager;
 	}
 
 	public function setServer($server)
@@ -66,6 +68,11 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 		$this->skipDatabase = $skipDatabase;
 	}
 
+	public function setCreateDatabase($createDatabase)
+	{
+		$this->createDatabase = $createDatabase;
+	}
+
 	/**
 	 * Performs an authentication.
 	 *
@@ -78,6 +85,12 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 	public function authenticate(array $credentials)
 	{
 		list($username, $password) = $credentials;
+
+		if($this->createDatabase == TRUE){
+			if($this->dbManager->tableDetect() == FALSE){
+				$this->dbManager->create();
+			}
+		}
 
 		$ldap = $this->ldap->ldap_connect($this->server, $this->port);
 		$this->ldap->ldap_set_option($ldap); //Set LDAP_OPT_PROTOCOL_VERSION (default 3)
