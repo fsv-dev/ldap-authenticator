@@ -15,9 +15,9 @@ extensions:
 	
 	ldap:
     	server: 'ldaps://ldap.com'
-    	port: 636
+    	port: 636 // Optional (default 636)
     	dn: 'dc=cz'
-    	skipDatabase: TRUE
+    	skipDatabase: TRUE // Optional (default FALSE)
 </pre>
 
 ### Parameters

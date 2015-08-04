@@ -37,7 +37,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 		TABLE_USER_ID = 'cuniPersonalId';
 
 	/**
-	 * @param Ldap    $ldap
+	 * @param Ldap $ldap
 	 * @param Context $db
 	 */
 	public function __construct(Ldap $ldap, Context $db)
@@ -102,7 +102,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 		}
 
 		// Database perform
-		if($this->skipDatabase == FALSE) {
+		if ($this->skipDatabase == FALSE) {
 			if ($this->databaseDetect($username) == TRUE) {
 				return new NS\Identity($username, $this->getRole($username)['role'], $this->getData($username));
 			}
