@@ -18,7 +18,7 @@ class LdapExtension extends Nette\DI\CompilerExtension
 	/** @var array Default values */
 	private $default = [
 		'port' => 636,
-		'authenticateOption' => FALSE,
+		'authenticateOption' => 'strict',
 		'createDatabase' => FALSE,
 	];
 

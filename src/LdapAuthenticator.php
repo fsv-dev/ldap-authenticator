@@ -115,7 +115,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 		}
 
 		// Full authenticate process
-		if ($this->authenticateOption == FALSE) {
+		if ($this->authenticateOption == 'strict') {
 			if ($this->databaseDetect($username) == TRUE) {
 				return new NS\Identity($username, $this->getRole($username)['role'], $this->getData($username));
 			}
