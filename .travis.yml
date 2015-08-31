@@ -39,7 +39,7 @@ matrix:
     - php: hhvm
 
 script:
-  - ./vendor/bin/tester -p $TESTER_PHP_BIN -s -c ./tests/php.ini ./tests
+  - ./vendor/bin/tester -p $TESTER_PHP_BIN -s ./tests
 
 after_failure:
   # Vytiskne obsah souborù *.actual
