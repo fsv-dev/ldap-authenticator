@@ -38,8 +38,8 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 
 	/**
 	 * @param DatabaseManager $dbManager
-	 * @param Ldap $ldap
-	 * @param Context $db
+	 * @param Ldap            $ldap
+	 * @param Context         $db
 	 */
 	public function __construct(DatabaseManager $dbManager, Ldap $ldap, Context $db)
 	{
@@ -117,7 +117,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 		// Full authenticate process
 		if ($this->authenticateOption == 'strict') {
 			if ($this->databaseDetect($username) == TRUE) {
-				return new NS\Identity($username, $this->getRole($username)['role'], $this->getData($username));
+				return new NS\Identity($this->getCuniPersonalId($username), $this->getRole($username)['role'], $this->getData($username));
 			}
 			throw new Nette\Security\AuthenticationException(self::ERROR_MESSAGE_DB_USER_NOT_FOUND, self::IDENTITY_NOT_FOUND);
 		}
@@ -128,7 +128,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 		// Only privileges
 		if ($this->authenticateOption == "onlyPrivilegedUsers") {
 			if ($this->databaseDetect($username) == TRUE) {
-				return new NS\Identity($username, $this->getRole($username)['role'], $this->getData($username));
+				return new NS\Identity($this->getCuniPersonalId($username), $this->getRole($username)['role'], $this->getData($username));
 			}
 			return new NS\Identity($username, 'guest');
 		}
@@ -202,6 +202,15 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 			return TRUE;
 		}
 		return FALSE;
+	}
+
+	private function getCuniPersonalId($login)
+	{
+		if (!is_numeric($login)) {
+			$login = $this->db->table(self::TABLE_NAME)->select(self::TABLE_USER_ID)->where('uid = ?', $login)->fetch();
+			return $login['cuniPersonalId'];
+		}
+		return $login;
 	}
 
 	/**
