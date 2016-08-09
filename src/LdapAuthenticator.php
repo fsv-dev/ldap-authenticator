@@ -231,7 +231,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 		try {
 			$this->db->table(self::TABLE_NAME)->insert($data);
 		} catch (\Exception $ex) {
-			throw new \Exception('Error: ', $ex->getMessage);
+			throw new \Exception('Error: ', $ex->getMessage());
 		}
 	}
 
