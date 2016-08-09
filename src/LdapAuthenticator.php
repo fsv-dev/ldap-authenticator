@@ -225,7 +225,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 		$data = [
 			'username' => $username,
 			'role' => 'guest',
-			'registred' => new Date,
+			'registred' => new \DateTime,
 		];
 
 		try {
