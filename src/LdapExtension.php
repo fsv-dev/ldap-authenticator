@@ -32,6 +32,8 @@ class LdapExtension extends Nette\DI\CompilerExtension
 			->addSetup('setServer', [$config['server']])
 			->addSetup('setPort', [$config['port']])
 			->addSetup('setDn', [$config['dn']])
+			->addSetup('setUser', [$config['user']])
+			->addSetup('setPassword', [$config['password']])
 			->addSetup('setAuthenticateOption', [$config['authenticateOption']])
 			->addSetup('setCreateDatabase', [$config['createDatabase']])
 			->setInject(FALSE);
