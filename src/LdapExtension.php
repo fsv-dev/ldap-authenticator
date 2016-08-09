@@ -29,11 +29,11 @@ class LdapExtension extends Nette\DI\CompilerExtension
 		$builder = $this->getContainerBuilder();
 		$builder->addDefinition($this->prefix('ldap'))
 			->setClass('Ldap\Authenticator')
-			->addSetup('setServer', array($config['server']))
-			->addSetup('setPort', array($config['port']))
-			->addSetup('setDn', array($config['dn']))
-			->addSetup('setAuthenticateOption', array($config['authenticateOption']))
-			->addSetup('setCreateDatabase', array($config['createDatabase']))
+			->addSetup('setServer', [$config['server']])
+			->addSetup('setPort', [$config['port']])
+			->addSetup('setDn', [$config['dn']])
+			->addSetup('setAuthenticateOption', [$config['authenticateOption']])
+			->addSetup('setCreateDatabase', [$config['createDatabase']])
 			->setInject(FALSE);
 
 		$builder->addDefinition($this->prefix('ldapLib'))
