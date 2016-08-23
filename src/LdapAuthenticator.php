@@ -22,13 +22,13 @@ use Nette;
  */
 class Authenticator extends Nette\Object implements NS\IAuthenticator
 {
-	private $server, $port, $dn, $db, $ldap, $dbManager, $createDatabase, $authenticateOption;
+	private $server, $port, $dn, $user, $password, $db, $ldap, $dbManager, $createDatabase, $authenticateOption;
 
 	const
-		ERROR_MESSAGE_AUTH_USER = 'Neplatne uzivatelske jmeno.',
-		ERROR_MESSAGE_AUTH_PASS = 'Neplatne heslo.',
+		ERROR_MESSAGE_AUTH_USER = 'Your account does not exist.',
+		ERROR_MESSAGE_AUTH_PASS = 'Wrong password.',
 		ERROR_MESSAGE_CONF_DETECT = 'Value of LdapAuthenticator config not be empty',
-		ERROR_MESSAGE_LDAP_BIND = 'Failed to bind to LDAP server',
+		ERROR_MESSAGE_LDAP_BIND = 'Ldap authentication failed. Have you right credentials?',
 		ERROR_MESSAGE_DB_USER_NOT_FOUND = 'Nemate opravneni k pristupu do teto aplikace.',
 		TABLE_NAME = 'users',
 		TABLE_ROLE = 'role',
@@ -38,13 +38,13 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 
 	/**
 	 * @param DatabaseManager $dbManager
-	 * @param Ldap            $ldap
-	 * @param Context         $db
+	 * @param Ldap $ldap
+	 * @param Context $db
 	 */
 	public function __construct(DatabaseManager $dbManager, Ldap $ldap, Context $db)
 	{
 		$this->db = $db;
-		$this->ldap = $ldap;
+		//$this->ldap = $ldap;
 		$this->dbManager = $dbManager;
 	}
 
@@ -61,6 +61,16 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 	public function setDn($dn)
 	{
 		$this->dn = $dn;
+	}
+
+	public function setUser($user)
+	{
+		$this->user = $user;
+	}
+
+	public function setPassword($password)
+	{
+		$this->password = $password;
 	}
 
 	public function setCreateDatabase($createDatabase)
@@ -92,24 +102,24 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 			}
 		}
 
-		$ldap = $this->ldap->ldap_connect($this->server, $this->port);
-		$this->ldap->ldap_set_option($ldap); //Set LDAP_OPT_PROTOCOL_VERSION (default 3)
+		$ldap = ldap_connect($this->server, $this->port);
+		ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3); // TODO volitelne ?
 
-		$res = $this->ldap->ldap_bind($ldap);
+		$res = @ldap_bind($ldap, $this->user, $this->password); // Log to LDAP server
 		if (!$res) {
 			throw new \Exception(self::ERROR_MESSAGE_LDAP_BIND);
 		}
 
-		$res = $this->ldap->ldap_search($ldap, $this->dn, $this->searchString($username));
-		if ($this->ldap->ldap_count_entries($ldap, $res) != 1) {
+		$res = ldap_search($ldap, $this->dn, $this->searchString($username));
+		if (ldap_count_entries($ldap, $res) != 1) {
 			throw new Nette\Security\AuthenticationException(self::ERROR_MESSAGE_AUTH_USER, self::IDENTITY_NOT_FOUND);
 		}
 
-		$entry = $this->ldap->ldap_first_entry($ldap, $res);
-		$dn = $this->ldap->ldap_get_dn($ldap, $entry);
+		$entry = ldap_first_entry($ldap, $res);
+		$dn = ldap_get_dn($ldap, $entry);
 
 		//bind na prihlasovaneho uzivatele
-		$res = $this->ldap->ldap_bind($ldap, $dn, $password);
+		$res = @ldap_bind($ldap, $dn, $password);
 		if (!$res) {
 			throw new Nette\Security\AuthenticationException(self::ERROR_MESSAGE_AUTH_PASS, self::INVALID_CREDENTIAL);
 		}
