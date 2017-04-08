@@ -19,7 +19,6 @@ class LdapExtension extends Nette\DI\CompilerExtension
 	private $default = [
 		'port' => 636,
 		'authenticateOption' => 'strict',
-		'createDatabase' => FALSE,
 	];
 
 	public function loadConfiguration()
@@ -29,19 +28,13 @@ class LdapExtension extends Nette\DI\CompilerExtension
 		$builder = $this->getContainerBuilder();
 		$builder->addDefinition($this->prefix('ldap'))
 			->setClass('Ldap\Authenticator')
-			->addSetup('setServer', [$config['server']])
-			->addSetup('setPort', [$config['port']])
-			->addSetup('setDn', [$config['dn']])
-			->addSetup('setUser', [$config['user']])
-			->addSetup('setPassword', [$config['password']])
-			->addSetup('setAuthenticateOption', [$config['authenticateOption']])
-			->addSetup('setCreateDatabase', [$config['createDatabase']])
+			->addSetup('setServer', array($config['server']))
+			->addSetup('setPort', array($config['port']))
+			->addSetup('setDn', array($config['dn']))
+			->addSetup('setAuthenticateOption', array($config['authenticateOption']))
 			->setInject(FALSE);
 
 		$builder->addDefinition($this->prefix('ldapLib'))
 			->setClass('Ldap\Ldap');
-
-		$builder->addDefinition($this->prefix('ldapDatabaseManager'))
-			->setClass('Ldap\DatabaseManager');
 	}
 }
