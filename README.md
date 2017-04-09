@@ -22,5 +22,6 @@ ldap:
     server: 'ldaps://ldap.com'
     port: 636 // Optional (default 636)
     dn: 'dc=cz'
-    authenticateOption: 'strict' // Optional (default FALSE)
+    user: 'username' 
+    password: 'passWorD'
 ```
