@@ -20,9 +20,9 @@ use Nette;
  *
  * @author Vaclav Kraus <krauva@gmail.com>
  */
-class Authenticator extends Nette\Object implements NS\IAuthenticator
+class Authenticator extends Nette\Object
 {
-	private $server, $port, $dn, $ldap, $authenticateOption;
+	private $server, $port, $dn, $ldap, $user, $password;
 
 	const
 		ERROR_MESSAGE_AUTH_USER = 'Neplatne uzivatelske jmeno.',
@@ -34,7 +34,11 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 		TABLE_ROLE = 'role',
 		TABLE_DATA = 'data',
 		TABLE_USERNAME = 'uid',
-		TABLE_USER_ID = 'cuniPersonalId';
+		TABLE_USER_ID = 'cuniPersonalId',
+		IDENTITY_NOT_FOUND = 1,
+		INVALID_CREDENTIAL = 2,
+		FAILURE = 3,
+		NOT_APPROVED = 4;
 
 	/**
 	 * @param Ldap $ldap
@@ -59,9 +63,14 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 		$this->dn = $dn;
 	}
 
-	public function setAuthenticateOption($option)
+	public function setUser($user)
 	{
-		$this->authenticateOption = $option;
+		$this->user = $user;
+	}
+
+	public function setPassword($password)
+	{
+		$this->password = $password;
 	}
 
 	/**
@@ -75,18 +84,18 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 	 */
 	public function authenticate(array $credentials)
 	{
-		list($username, $password) = $credentials;
+		[$username, $password] = $credentials;
 
 		$ldap = $this->ldap->ldap_connect($this->server, $this->port);
 		$this->ldap->ldap_set_option($ldap); //Set LDAP_OPT_PROTOCOL_VERSION (default 3)
 
-		$res = $this->ldap->ldap_bind($ldap);
+		$res = ldap_bind($ldap, $this->user, $this->password);
 		if (!$res) {
 			throw new \Exception(self::ERROR_MESSAGE_LDAP_BIND);
 		}
 
 		$res = $this->ldap->ldap_search($ldap, $this->dn, $this->searchString($username));
-		if ($this->ldap->ldap_count_entries($ldap, $res) != 1) {
+		if ($this->ldap->ldap_count_entries($ldap, $res) !== 1) {
 			throw new Nette\Security\AuthenticationException(self::ERROR_MESSAGE_AUTH_USER, self::IDENTITY_NOT_FOUND);
 		}
 
